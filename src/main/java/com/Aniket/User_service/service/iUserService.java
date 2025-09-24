@@ -12,5 +12,6 @@ public interface iUserService {
 
     ResponseEntity<List<User>> findAllUsers();
 
-    User findByEmail(String username);
+    User findByEmail(String email);
+    List<User> findAllByEmail(String email);
 }
