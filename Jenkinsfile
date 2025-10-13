@@ -116,7 +116,7 @@ pipeline {
                                 gcloud auth activate-service-account --key-file=\$GOOGLE_APPLICATION_CREDENTIALS
                                 gcloud container clusters get-credentials ${CLUSTER_NAME} --zone ${ZONE} --project ${PROJECT_ID}
                                 kubectl create namespace ${K8S_NAMESPACE} || true
-                                sed -i 's|image: .*|image: ${fullImage}|g' gateway-deployment.yaml
+                                sed -i 's|image: .*|image: ${fullImage}|g' user-deployment.yaml
                                 kubectl apply -f user-configmap.yaml
                                 kubectl apply -f user-deployment.yaml
                                 kubectl rollout status deployment/${K8S_DEPLOYMENT} --namespace=${K8S_NAMESPACE} --timeout=10m
