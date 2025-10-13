@@ -4,10 +4,12 @@ import com.Aniket.User_service.model.User;
 import com.Aniket.User_service.model.dto.AuthRequest;
 import com.Aniket.User_service.model.dto.UserDto;
 import com.Aniket.User_service.service.iUserService;
+import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.MeterRegistry;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.hc.client5.http.auth.BearerToken;
+//import org.apache.hc.client5.http.auth.BearerToken;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,12 +21,31 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequestMapping()
-@RequiredArgsConstructor
+//@RequiredArgsConstructor
 public class UserController {
 
 
     private final iUserService userService;
     private final PasswordEncoder passwordEncoder;
+
+    private final Counter healthApiCounter;
+
+    public UserController(iUserService userService, PasswordEncoder passwordEncoder, MeterRegistry registry) {
+        this.userService = userService;
+        this.passwordEncoder = passwordEncoder;
+        this.healthApiCounter = Counter.builder("health_api_requests_total")
+                .description("Total number of health API requests")
+                .register(registry);
+    }
+
+    @GetMapping("/health")
+    public String healthCheck() {
+
+        healthApiCounter.increment(); // increase counter each time
+        throw new RuntimeException();
+//        return "OK";
+
+    }
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody User user) {
