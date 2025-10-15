@@ -15,13 +15,10 @@ spec:
     spec:
       containers:
         - name: user-service
-          image: captainAniii/user-service:0.5
-          imagePullPolicy: IfNotPresent
+          image: user-service:latest
+          imagePullPolicy: Never
           ports:
             - containerPort: 8081
-          env:
-            - name: EUREKA_SERVER_URL
-              value: "http://discovery-server:8761/eureka/"
           volumeMounts:
             - name: config-volume
               mountPath: /app/config/application.yml
@@ -38,7 +35,7 @@ metadata:
   name: user-service
   namespace: backend
 spec:
-  type: LoadBalancer
+  type: ClusterIP
   selector:
     app: user-service
   ports:
